@@ -8,7 +8,7 @@ def home(request):
 def about(request):
     return render(request, 'about.html')
 
-def creat_story(request):
+def create_story(request):
     return render(request, 'create_story.html')
 
 def contact(request):
