@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from stories.forms import ContactModelForm
 # Create your views here.
 
 def home(request):
@@ -12,7 +12,14 @@ def create_story(request):
     return render(request, 'create_story.html')
 
 def contact(request):
-    return render(request, 'contact.html')
+    if request.method == 'POST':
+        form = ContactModelForm(request.POST)
+        if form.is_valid():
+            pass
+    else:
+        form = ContactModelForm()
+        
+    return render( request , 'contact.html', {'form': form})
 
 def recipes(request):
     return render(request, 'recipes.html')
