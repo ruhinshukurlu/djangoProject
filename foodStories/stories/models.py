@@ -4,13 +4,19 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Author(models.Model):
-    first_name = models.CharField(_("First Name"), max_length=50)
-    last_name = models.CharField(_("Last Name"), max_length=50)
+    first_name = models.CharField(_("First Name"), max_length=50,blank = True)
+    last_name = models.CharField(_("Last Name"), max_length=50,blank = True)
     username = models.CharField(_("Username"), max_length=50)
     email = models.EmailField(_("Email"), max_length=254)
     password = models.CharField(_("Password"), max_length=50, null=True)
-    profile_img = models.ImageField(_("Profile Image"), upload_to='profile-pictures/')
+    profile_img = models.ImageField(_("Profile Image"), upload_to='profile-pictures/',blank = True)
 
+    class Meta:
+        verbose_name = _("Author")
+        verbose_name_plural = _("Authors")
+
+    def __str__(self):
+        return self.username
 
 class Story(models.Model):
     title = models.CharField(_("Title"), max_length=200)
@@ -74,9 +80,9 @@ class Category(models.Model):
 
 
 class Contact(models.Model):
-    name = models.CharField(_("Name"), max_length=50)
+    name = models.CharField(_("Name"), max_length=50,blank = True)
     email = models.EmailField(_("Email"), max_length=254)
-    subject = models.CharField(_("Subject"), max_length=50)
+    subject = models.CharField(_("Subject"), max_length=50,blank = True)
     message = models.TextField(_("Message"))
 
     class Meta:
