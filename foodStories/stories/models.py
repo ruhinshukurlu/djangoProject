@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 # Create your models here.
 
 
@@ -40,7 +40,7 @@ class Story(models.Model):
 class Recipe(models.Model):
     title = models.CharField(_("Title"), max_length=200)
     description = models.TextField(_("Description"))
-    storie_img = models.ImageField(_("REcipe Image"), upload_to = 'recipe-pictures/')
+    storie_img = models.ImageField(_("Recipe Image"), upload_to = 'recipe-pictures/')
 
     author = models.ForeignKey("stories.Author", verbose_name=_("Author"), on_delete=models.CASCADE)
     category = models.ManyToManyField("stories.Category", verbose_name=_(""))
@@ -70,7 +70,8 @@ class Comment(models.Model):
 
 class Category(models.Model):
     title = models.CharField(_("Title"), max_length=50)
-    
+    category_img = models.ImageField(_("Category Image"), upload_to='category-pictures/')
+
     class Meta:
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
@@ -103,5 +104,28 @@ class Subscribe(models.Model):
     def __str__(self):
         return self.name
 
+class StaticInfo(models.Model):
+    address = models.CharField(_("Address"), max_length=100)
+    contact_number = models.CharField(_("Contact Number"), max_length=50)
+    email_address = models.EmailField(_("Email Address"), max_length=254)
+    website = models.CharField(_("Website"), max_length=50)
+    
+    class Meta:
+        verbose_name = _("StaticInfo")
+        verbose_name_plural = _("StaticInfos")
+
+    def __str__(self):
+        return self.email_address
+
+class Tag(models.Model):
+
+    title = models.CharField(_("Tag title"), max_length=50)
+
+    class Meta:
+        verbose_name = _("Tag")
+        verbose_name_plural = _("Tags")
+
+    def __str__(self):
+        return self.name
 
     

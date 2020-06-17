@@ -1,19 +1,19 @@
 from django.urls import path
-from stories import views
+from stories.views import HomeView,about,contact,create_story,recipes,stories,single,user_profile,email_subscribers,change_password,forget_password,login,register,reset_password
 
 urlpatterns = [
-    path('', views.home, name='Home'),
-    path('about', views.about, name='About'),
-    path('contact', views.contact, name='contact'),
-    path('create_story', views.create_story, name='create_story'),
-    path('recipes', views.recipes, name='recipes'),
-    path('stories', views.stories, name='stories'),
-    path('single', views.single, name='single'),
-    path('user_profile', views.user_profile, name='user_profile'),
-    path('email_subscribers', views.email_subscribers, name='email_subscribers'),
-    path('change_password', views.change_password, name='change_password'),
-    path('forget_password', views.forget_password, name='forget_password'),
-    path('login', views.login, name='login'),
-    path('register', views.register, name='register'),
-    path('reset_password', views.reset_password, name='reset_password'),
+    path('', HomeView.as_view(), name='Home'),
+    path('about', about, name='About'),
+    path('contact', contact, name='contact'),
+    path('create_story', create_story, name='create_story'),
+    path('recipes', recipes, name='recipes'),
+    path('stories', stories, name='stories'),
+    path('single', single, name='single'),
+    path('user_profile', user_profile, name='user_profile'),
+    path('email_subscribers', email_subscribers, name='email_subscribers'),
+    path('change_password', change_password, name='change_password'),
+    path('forget_password', forget_password, name='forget_password'),
+    path('login', login, name='login'),
+    path('register', register, name='register'),
+    path('reset_password', reset_password, name='reset_password'),
 ]

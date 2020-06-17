@@ -1,12 +1,22 @@
 from django.shortcuts import render
 from stories.forms import ContactModelForm
+from django.http import HttpResponse
+from django.views import View
 # Create your views here.
 
-def home(request):
-    return render(request, 'index.html')
+
+class HomeView(View):
+    template_name = "index.html"
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
 
 def about(request):
     return render(request, 'about.html')
+
+# class AboutView(View):
+#     template_name = ".html"
+
 
 def create_story(request):
     return render(request, 'create_story.html')
