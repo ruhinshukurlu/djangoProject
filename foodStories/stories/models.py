@@ -18,6 +18,7 @@ class Author(models.Model):
     def __str__(self):
         return self.username
 
+
 class Story(models.Model):
     title = models.CharField(_("Title"), max_length=200)
     description = models.TextField(_("Description"))
@@ -58,7 +59,9 @@ class Recipe(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey("stories.Author", verbose_name=_("Comment Author"), on_delete=models.CASCADE)
-    post = models.ForeignKey("stories.Story", verbose_name=_("Story Comment"), on_delete=models.CASCADE)
+    story = models.ForeignKey("stories.Story", verbose_name=_("Story Comment"), on_delete=models.CASCADE)
+    reply = models.ForeignKey("self", verbose_name=_("Comment reply"), on_delete=models.CASCADE, blank=True, null = True)
+    
     text = models.TextField(_("Text"))
     created_time = models.DateTimeField(_("Created Time"), auto_now_add=True)    
 
@@ -120,6 +123,8 @@ class StaticInfo(models.Model):
 class Tag(models.Model):
 
     title = models.CharField(_("Tag title"), max_length=50)
+    stories = models.ManyToManyField("stories.Story", verbose_name=_("Story"), related_name='tags')
+    recipes = models.ManyToManyField("stories.Recipe", verbose_name=_("Recipe"), related_name='tags')
 
     class Meta:
         verbose_name = _("Tag")

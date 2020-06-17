@@ -1,7 +1,8 @@
-from django.shortcuts import render
-from stories.forms import ContactModelForm
+from django.shortcuts import render,redirect
+from stories.forms import ContactModelForm,StoryForm
 from django.http import HttpResponse
 from django.views import View
+from django.views.generic import TemplateView
 # Create your views here.
 
 
@@ -11,25 +12,43 @@ class HomeView(View):
         return render(request, self.template_name)
 
 
-def about(request):
-    return render(request, 'about.html')
+class AboutView(TemplateView):
+    template_name = "about.html"
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
 
-# class AboutView(View):
-#     template_name = ".html"
 
+class StoryView(View):
+    template_name = 'create_story.html'
+    form_class = StoryForm
 
-def create_story(request):
-    return render(request, 'create_story.html')
+    def get(self,request,*args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'StoryForm' : form})
 
-def contact(request):
-    if request.method == 'POST':
-        form = ContactModelForm(request.POST)
+    def post(self,request,*args, **kwargs):
+        form = self.form_class(request.POST)
         if form.is_valid():
-            pass
-    else:
-        form = ContactModelForm()
-        
-    return render( request , 'contact.html', {'form': form})
+            form.save()
+        return render(request, self.template_name, {'StoryForm' : form})
+
+
+
+class ContactView(View):
+    template_name = 'contact.html'
+    form_class = ContactModelForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form' : form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+        return render(request,self.template_name, {'form' : form})
+
+
 
 def recipes(request):
     return render(request, 'recipes.html')

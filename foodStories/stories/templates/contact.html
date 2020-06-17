@@ -24,8 +24,8 @@ Stories - Free Bootstrap 4 Template by Colorlib
         <div class="container">
             <div class="row block-9">
                 <div class="col-md-6 order-md-last d-flex">
-                    <form action="#" class="bg-light p-5 contact-form">
-
+                    <form method="POST" class="bg-light p-5 contact-form">
+                        {% csrf_token %}
                         <div class="form-group">
                             {{form.name}}
                         </div>

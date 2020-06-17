@@ -1,11 +1,11 @@
 from django.urls import path
-from stories.views import HomeView,about,contact,create_story,recipes,stories,single,user_profile,email_subscribers,change_password,forget_password,login,register,reset_password
+from stories.views import HomeView,StoryView,AboutView,ContactView ,recipes,stories,single,user_profile,email_subscribers,change_password,forget_password,login,register,reset_password
 
 urlpatterns = [
     path('', HomeView.as_view(), name='Home'),
-    path('about', about, name='About'),
-    path('contact', contact, name='contact'),
-    path('create_story', create_story, name='create_story'),
+    path('about', AboutView.as_view(), name='About'),
+    path('contact', ContactView.as_view(), name='contact'),
+    path('create_story', StoryView.as_view(), name='create_story'),
     path('recipes', recipes, name='recipes'),
     path('stories', stories, name='stories'),
     path('single', single, name='single'),

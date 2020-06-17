@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from stories.models import Contact,Subscribe
+from stories.models import Contact,Subscribe,Story
 
 class ContactModelForm(forms.ModelForm):
     
@@ -29,3 +29,22 @@ class ContactModelForm(forms.ModelForm):
                 }),
         }
 
+class StoryForm(forms.ModelForm):
+    
+    class Meta:
+        model = Story
+        fields = ("title",'description','category','storie_img',)
+
+        widgets = {
+            'title' : forms.TextInput(attrs = {
+                'class' : 'form-control',
+                'placeholder' : 'Enter title',
+            }),
+            'description' : forms.Textarea(attrs = {
+                'class' : 'form-control',
+                'placeholder' : 'Enter description',
+            }),
+            'category' : forms.Select(attrs = {
+                'class' : 'form-control',
+            }),
+        }

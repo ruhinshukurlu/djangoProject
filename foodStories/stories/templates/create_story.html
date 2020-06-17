@@ -10,25 +10,21 @@ Stories - Free Bootstrap 4 Template by Colorlib
         <div class="container">
             <div class="row block-9 justify-content-center">
                 <div class="col-md-6 order-md-last d-flex">
-                    <form action="#" class="bg-light p-5 contact-form">
+                    <form method="POST" class="bg-light p-5 contact-form">
+                        {% csrf_token %}
                         <a class="navbar-brand center" href="#">Stories<span>.</span></a>
-
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Title">
+                            {{StoryForm.title}}
                         </div>
                         <div class="form-group">
-                            <textarea rows="10" class="form-control" placeholder="Description"></textarea>
+                            {{StoryForm.description}}
                         </div>
                         <div class="form-group">
-                            <select class="form-control" name="" id="">
-                                    <option value="0">Select category</option>
-                                    <option value="1">-----</option>
-                                
-                                </select>
+                            {{StoryForm.category}}
                         </div>
 
                         <div class="form-group">
-                            <input type="file">
+                            {{StoryForm.storie_img}}
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Create" class="btn btn-primary py-3 px-5">
