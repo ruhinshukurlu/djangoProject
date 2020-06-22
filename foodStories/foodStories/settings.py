@@ -42,6 +42,32 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'stories',
     'account',
+    'rest_framework',
+    'social_django',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.linkedin.LinkedinOAuth2',
+    'social_core.backends.instagram.InstagramOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.google.GoogleOAuth2',
+]
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '79103803070-0ee8bkehpamls5rkjlfd19hi3qlgvujc.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'o9Bb5q8KSo1zJ8PSo49OG3rO'
+
+SOCIAL_AUTH_FACEBOOK_KEY = '2724710551136574'        # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = '0793350893f97f3950d141f446c67901'  # App Secret
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_link'] # add this
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {       # add this
+  'fields': 'id, name, email, picture.type(large), link'
+}
+SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [                 # add this
+    ('name', 'name'),
+    ('email', 'email'),
+    ('picture', 'picture'),
+    ('link', 'profile_url'),
 ]
 
 MIDDLEWARE = [
@@ -67,6 +93,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends', # add this
+                'social_django.context_processors.login_redirect', # add this
             ],
         },
     },
@@ -91,9 +119,9 @@ DATABASES = {
     }
 }
 
-LOGIN_REDIRECT_URL = reverse_lazy('stories : Home')
-LOGIN_URL = reverse_lazy('account : login')
-LOGOUT_REDIRECT_URL = reverse_lazy('account : login')
+LOGIN_REDIRECT_URL = reverse_lazy('stories:Home')
+LOGIN_URL = reverse_lazy('account:login')
+LOGOUT_REDIRECT_URL = reverse_lazy('account:login')
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

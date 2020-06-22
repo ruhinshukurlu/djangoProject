@@ -24,6 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('stories.urls',namespace = 'stories')),
     path('account/',include('account.urls', namespace = 'account')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('social-auth/', include('social_django.urls', namespace="social")),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  
