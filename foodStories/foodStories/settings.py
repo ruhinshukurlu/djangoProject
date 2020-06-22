@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'stories',
+    'account',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +72,8 @@ TEMPLATES = [
     },
 ]
 
+AUTH_USER_MODEL = 'account.MyUser'
+
 WSGI_APPLICATION = 'foodStories.wsgi.application'
 
 
@@ -78,15 +82,18 @@ WSGI_APPLICATION = 'foodStories.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'foodStories',
-        'USER': 'ruhinshukurlu',
-        'PASSWORD': 'ouHQkltWnPhf0KVP',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'db_name',
+        'USER': 'db_user',
+        'PASSWORD': 'SvYbm5l5BVhw2WEB7XPYBMKI',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
+LOGIN_REDIRECT_URL = reverse_lazy('stories : Home')
+LOGIN_URL = reverse_lazy('account : login')
+LOGOUT_REDIRECT_URL = reverse_lazy('account : login')
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

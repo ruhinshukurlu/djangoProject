@@ -1,6 +1,8 @@
 from django.urls import path
 from stories.views import HomeView,StoryView,AboutView,ContactView ,recipes,stories,single,user_profile,email_subscribers,change_password,forget_password,login,register,reset_password
 
+app_name = 'stories'
+
 urlpatterns = [
     path('', HomeView.as_view(), name='Home'),
     path('about', AboutView.as_view(), name='About'),

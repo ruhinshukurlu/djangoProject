@@ -1,24 +1,24 @@
 from django.contrib import admin
-from stories.models import Author,Story,Recipe,Category,Comment,Contact,Subscribe
+from stories.models import Story,Recipe,Category,Comment,Contact,Subscribe
 # Register your models here.
 
 
-@admin.register(Author)
-class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('first_name','last_name','username','email',)
-    ordering = ('first_name',)
-    search_fields = ('first_name','last_name','username','email',)
+# @admin.register(Author)
+# class AuthorAdmin(admin.ModelAdmin):
+#     list_display = ('first_name','last_name','username','email',)
+#     ordering = ('first_name',)
+#     search_fields = ('first_name','last_name','username','email',)
 
-    fieldsets = (
-        ('Required Information', {
-            'description' : 'These fields are required',
-            "fields": ('username','email','password'),
-        }),
-        ('Optional Information', {
-            'classes' : ('collapse',),
-            "fields": ('first_name','last_name','profile_img',),
-        }),
-    )
+#     fieldsets = (
+#         ('Required Information', {
+#             'description' : 'These fields are required',
+#             "fields": ('username','email','password'),
+#         }),
+#         ('Optional Information', {
+#             'classes' : ('collapse',),
+#             "fields": ('first_name','last_name','profile_img',),
+#         }),
+#     )
     
 
 

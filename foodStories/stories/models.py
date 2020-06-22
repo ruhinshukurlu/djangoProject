@@ -3,20 +3,20 @@ from django.utils.translation import ugettext as _
 # Create your models here.
 
 
-class Author(models.Model):
-    first_name = models.CharField(_("First Name"), max_length=50,blank = True)
-    last_name = models.CharField(_("Last Name"), max_length=50,blank = True)
-    username = models.CharField(_("Username"), max_length=50)
-    email = models.EmailField(_("Email"), max_length=254)
-    password = models.CharField(_("Password"), max_length=50, null=True)
-    profile_img = models.ImageField(_("Profile Image"), upload_to='profile-pictures/',blank = True)
+# class Author(models.Model):
+#     first_name = models.CharField(_("First Name"), max_length=50,blank = True)
+#     last_name = models.CharField(_("Last Name"), max_length=50,blank = True)
+#     username = models.CharField(_("Username"), max_length=50)
+#     email = models.EmailField(_("Email"), max_length=254)
+#     password = models.CharField(_("Password"), max_length=50, null=True)
+#     profile_img = models.ImageField(_("Profile Image"), upload_to='profile-pictures/',blank = True)
 
-    class Meta:
-        verbose_name = _("Author")
-        verbose_name_plural = _("Authors")
+#     class Meta:
+#         verbose_name = _("Author")
+#         verbose_name_plural = _("Authors")
 
-    def __str__(self):
-        return self.username
+#     def __str__(self):
+#         return self.username
 
 
 class Story(models.Model):
@@ -24,7 +24,7 @@ class Story(models.Model):
     description = models.TextField(_("Description"))
     storie_img = models.ImageField(_("Storie Image"), upload_to = 'storie-pictures/')
 
-    author = models.ForeignKey("stories.Author", verbose_name=_("Author"), on_delete=models.CASCADE)
+    author = models.ForeignKey("account.MyUser", verbose_name=_("Author"), on_delete=models.CASCADE)
     category = models.ManyToManyField("stories.Category", verbose_name=_(""))
 
     created_at = models.DateTimeField(_("Created Time"),auto_now_add=True)
@@ -43,7 +43,7 @@ class Recipe(models.Model):
     description = models.TextField(_("Description"))
     storie_img = models.ImageField(_("Recipe Image"), upload_to = 'recipe-pictures/')
 
-    author = models.ForeignKey("stories.Author", verbose_name=_("Author"), on_delete=models.CASCADE)
+    author = models.ForeignKey("account.MyUser", verbose_name=_("Author"), on_delete=models.CASCADE)
     category = models.ManyToManyField("stories.Category", verbose_name=_(""))
 
     created_at = models.DateTimeField(_("Created Time"),auto_now_add=True)
@@ -58,10 +58,8 @@ class Recipe(models.Model):
 
 
 class Comment(models.Model):
-    author = models.ForeignKey("stories.Author", verbose_name=_("Comment Author"), on_delete=models.CASCADE)
-    story = models.ForeignKey("stories.Story", verbose_name=_("Story Comment"), on_delete=models.CASCADE)
-    reply = models.ForeignKey("self", verbose_name=_("Comment reply"), on_delete=models.CASCADE, blank=True, null = True)
-    
+    author = models.ForeignKey("account.MyUser", verbose_name=_("Comment Author"), on_delete=models.CASCADE)
+    post = models.ForeignKey("stories.Story", verbose_name=_("Story Comment"), on_delete=models.CASCADE)
     text = models.TextField(_("Text"))
     created_time = models.DateTimeField(_("Created Time"), auto_now_add=True)    
 
@@ -123,9 +121,7 @@ class StaticInfo(models.Model):
 class Tag(models.Model):
 
     title = models.CharField(_("Tag title"), max_length=50)
-    stories = models.ManyToManyField("stories.Story", verbose_name=_("Story"), related_name='tags')
-    recipes = models.ManyToManyField("stories.Recipe", verbose_name=_("Recipe"), related_name='tags')
-
+    
     class Meta:
         verbose_name = _("Tag")
         verbose_name_plural = _("Tags")
