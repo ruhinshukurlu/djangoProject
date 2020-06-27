@@ -24,7 +24,7 @@ from stories.models import Story,Recipe,Category,Comment,Contact,Subscribe
 
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
-    list_display = ('title','description')
+    list_display = ('title','description','author')
     ordering = ('title',)
     search_fields = ('title','author','category')
     list_filter = ('created_at',)

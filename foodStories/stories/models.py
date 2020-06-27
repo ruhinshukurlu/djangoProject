@@ -1,5 +1,9 @@
 from django.db import models
 from django.utils.translation import ugettext as _
+
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters.html import HtmlFormatter
+from pygments import highlight
 # Create your models here.
 
 
@@ -22,10 +26,11 @@ from django.utils.translation import ugettext as _
 class Story(models.Model):
     title = models.CharField(_("Title"), max_length=200)
     description = models.TextField(_("Description"))
-    storie_img = models.ImageField(_("Storie Image"), upload_to = 'storie-pictures/')
+    storie_img = models.ImageField(_("Storie Image"), upload_to = 'storie-pictures/', blank=True, null=True)
 
-    author = models.ForeignKey("account.MyUser", verbose_name=_("Author"), on_delete=models.CASCADE)
-    category = models.ManyToManyField("stories.Category", verbose_name=_(""))
+    author = models.ForeignKey("account.MyUser", verbose_name=_("Author"), on_delete=models.CASCADE, null=True, related_name = 'stories')
+    highlighted = models.TextField()
+    category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True, related_name = 'stories')
 
     created_at = models.DateTimeField(_("Created Time"),auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated Time"), auto_now=True)
@@ -37,6 +42,18 @@ class Story(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        """
+            Use the `pygments` library to create a highlighted HTML
+            representation of the story.
+        """
+        lexer = get_lexer_by_name(self.language)
+        linenos = 'table' if self.linenos else False
+        options = {'title': self.title} if self.title else {}
+        formatter = HtmlFormatter(style=self.style, linenos=linenos,
+                                full=True, **options)
+        self.highlighted = highlight(self.code, lexer, formatter)
+        super(Story, self).save(*args, **kwargs)
 
 class Recipe(models.Model):
     title = models.CharField(_("Title"), max_length=200)

@@ -2,9 +2,20 @@ from django.shortcuts import render,redirect
 from stories.forms import ContactModelForm,StoryForm
 from django.http import HttpResponse
 from django.views import View
+from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView, FormMixin
 from django.views.generic import TemplateView
+from stories.models import Story
+from django.contrib import messages
+from django.urls import reverse_lazy
+
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
+from stories.api.serializers import StorySerializer
 # Create your views here.
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class HomeView(View):
     template_name = "index.html"
@@ -18,20 +29,22 @@ class AboutView(TemplateView):
         return render(request, self.template_name)
 
 
-class StoryView(View):
+class StoryView(CreateView):
+    
     template_name = 'create_story.html'
     form_class = StoryForm
 
-    def get(self,request,*args, **kwargs):
+    def get(self, request, *args, **kwargs):
         form = self.form_class()
-        return render(request, self.template_name, {'StoryForm' : form})
+        print(self.request.user)
+        return render(request, self.template_name, {'form' : form})
 
-    def post(self,request,*args, **kwargs):
+    def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
+            form.instance.user = self.request.user
             form.save()
-        return render(request, self.template_name, {'StoryForm' : form})
-
+        return render(request,self.template_name, {'form' : form})
 
 
 class ContactView(View):
@@ -79,3 +92,48 @@ def register(request):
 
 def reset_password(request):
     return render(request, 'accounts/reset_password.html')
+
+
+@csrf_exempt
+def story_list(request):
+    """
+    List all code story, or create a new story.
+    """
+    if request.method == 'GET':
+        stories = Story.objects.all()
+        serializer = StorySerializer(stories, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = StorySerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
+
+@csrf_exempt
+def story_detail(request, pk):
+    """
+    Retrieve, update or delete a story.
+    """
+    try:
+        story = Story.objects.get(pk=pk)
+    except Story.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = StorySerializer(story)
+        return JsonResponse(serializer.data)
+
+    elif request.method == 'PUT':
+        data = JSONParser().parse(request)
+        serializer = StorySerializer(story, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data)
+        return JsonResponse(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        story.delete()
+        return HttpResponse(status=204)
