@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'stories',
     'account',
+    'corsheaders',
     'rest_framework',
     'social_django',
+    'django_celery_results',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -70,7 +72,18 @@ SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [                 # add this
     ('link', 'profile_url'),
 ]
 
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Africa/Nairobi'
+
+
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -81,6 +94,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'foodStories.urls'
+CORS_ORIGIN_ALLOW_ALL = True
 
 TEMPLATES = [
     {

@@ -1,8 +1,12 @@
 from rest_framework import status
-from stories.models import Story
-from stories.api.serializers import StorySerializer, UserSerializer
+from stories.models import Story, Car, Recipe, Comment, Contact, Category, Tag 
+from stories.api.serializers import StorySerializer, UserSerializer, RecipeSerializer, CommentSerializer,\
+                                    ContactSerializer, CategorySerializer, TagSerializer, CarModelSerializer,\
+                                    RegisterSerializer
+                        
 from django.http import Http404
 from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView
 from rest_framework import generics
 from rest_framework import permissions
 from stories.api.permissions import IsOwnerOrReadOnly
@@ -20,151 +24,85 @@ User = get_user_model()
 
 
 
-
-
-@api_view(['GET', 'POST'])
-def story_list(request):
-    """
-    List all stories, or create a new story.
-    """
-    if request.method == 'GET':
-        stories = Story.objects.all()
-        serializer = StorySerializer(stories, many=True)
-        return Response(serializer.data)
-
-    elif request.method == 'POST':
-        serializer = StorySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def story_detail(request, pk):
-    """
-    Retrieve, update or delete a story.
-    """
-    try:
-        story = Story.objects.get(pk=pk)
-    except Story.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = StorySerializer(story)
-        return Response(serializer.data)
-
-    elif request.method == 'PUT':
-        serializer = StorySerializer(story, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        story.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class StoryList(APIView):
-    """
-    List all stories, or create a new story.
-    """
-    def get(self, request, format=None):
-        stories = Story.objects.all()
-        serializer = StorySerializer(stories, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = StorySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    
-class StoryDetail(APIView):
-    """
-    Retrieve, update or delete a story instance.
-    """
-    def get_object(self, pk):
-        try:
-            return Story.objects.get(pk=pk)
-        except Story.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        story = self.get_object(pk)
-        serializer = StorySerializer(story)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        story = self.get_object(pk)
-        serializer = StorySerializer(story, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        story = self.get_object(pk)
-        story.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-# class StoryGenericList(generics.ListCreateAPIView):
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-#     queryset = Story.objects.all()
-#     serializer_class = StorySerializer
-
-#     def perform_create(self, serializer):
-#         serializer.save(AUTHOR=self.request.user)
-
-
-# class StoryGenericDetail(generics.RetrieveUpdateDestroyAPIView):
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-#                          IsOwnerOrReadOnly]
-#     queryset = Story.objects.all()
-#     serializer_class = StorySerializer
-
-# class StoryHighlight(generics.GenericAPIView):
-#     queryset = Story.objects.all()
-#     renderer_classes = [renderers.StaticHTMLRenderer]
-
-#     def get(self, request, *args, **kwargs):
-#         story = self.get_object()
-#         return Response(story.highlighted)
-
-
 class StoryViewSet(viewsets.ModelViewSet):
     """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
+        This viewset automatically provides `list`, `create`, `retrieve`,
+        `update` and `destroy` actions.
 
-    Additionally we also provide an extra `highlight` action.
+        Additionally we also provide an extra `highlight` action.
     """
     queryset = Story.objects.all()
     serializer_class = StorySerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly]
 
-    @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
-    def highlight(self, request, *args, **kwargs):
-        story = self.get_object()
-        return Response(story.highlighted)
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+class RecipeViewSet(viewsets.ModelViewSet):
+    """
+        This viewset automatically provides `list`, `create`, `retrieve`,
+        `update` and `destroy` actions.
+
+        Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
 
-# class UserList(generics.ListAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
+class ContactViewSet(viewsets.ModelViewSet):
+    """
+        This viewset automatically provides `list`, `create`, `retrieve`,
+        `update` and `destroy` actions.
 
+        Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
 
-# class UserDetail(generics.RetrieveAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
+class CommentViewSet(viewsets.ModelViewSet):
+    """
+        This viewset automatically provides `list`, `create`, `retrieve`,
+        `update` and `destroy` actions.
+
+        Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    """
+        This viewset automatically provides `list`, `create`, `retrieve`,
+        `update` and `destroy` actions.
+
+        Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
+
+class TagViewSet(viewsets.ModelViewSet):
+    """
+        This viewset automatically provides `list`, `create`, `retrieve`,
+        `update` and `destroy` actions.
+
+        Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
+
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -174,11 +112,28 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserSerializer
 
 
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'users': reverse('user-list', request=request, format=format),
-        'stories': reverse('story-list', request=request, format=format)
-    })
+# @api_view(['GET'])
+# def api_root(request, format=None):
+#     return Response({
+#         'users': reverse('user-list', request=request, format=format),
+#         'stories': reverse('story-list', request=request, format=format),
+#     })
+
+
+class UserRegisterView(CreateAPIView):
+    model = User
+    serializer_class = RegisterSerializer
+    
+
+class CarViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Car.objects.all()
+    serializer_class = CarModelSerializer
+   
 
 

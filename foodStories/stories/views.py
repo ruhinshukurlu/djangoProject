@@ -1,21 +1,40 @@
 from django.shortcuts import render,redirect
-from stories.forms import ContactModelForm,StoryForm
-from django.http import HttpResponse
+from stories.forms import ContactModelForm,StoryForm, AddNumbersForm, RecipeForm
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views import View
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView, FormMixin
 from django.views.generic import TemplateView
-from stories.models import Story
+from stories.models import Story, AddResult
 from django.contrib import messages
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from stories.api.serializers import StorySerializer
+
+from stories.tasks import add, story_count
 # Create your views here.
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
+
+class AddNumbersView(FormView):
+    form_class = AddNumbersForm
+    template_name = 'add-numbers.html'
+    success_url = 'numbers/add'
+
+    def form_valid(self, form):
+        x = form.cleaned_data['x']
+        y = form.cleaned_data['y']
+        result = add.delay(x,y)
+        AddResult.objects.create(result = result.get())
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, "Something went wrong")
+        return super().form_invalid(form)
+
 
 class HomeView(View):
     template_name = "index.html"
@@ -34,6 +53,7 @@ class StoryView(CreateView):
     template_name = 'create_story.html'
     form_class = StoryForm
 
+
     def get(self, request, *args, **kwargs):
         form = self.form_class()
         print(self.request.user)
@@ -41,8 +61,27 @@ class StoryView(CreateView):
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
+        print(request.POST)
         if form.is_valid():
-            form.instance.user = self.request.user
+            form.instance.author = self.request.user
+            form.save()
+            return HttpResponseRedirect(reverse_lazy('stories:Home'))
+        return render(request,self.template_name, {'form' : form})
+    
+    
+
+class RecipeView(CreateView):
+    template_name = 'create_story.html'
+    form_class = RecipeForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form' : form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.instance.author = self.request.user
             form.save()
         return render(request,self.template_name, {'form' : form})
 

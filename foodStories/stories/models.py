@@ -6,30 +6,25 @@ from pygments.formatters.html import HtmlFormatter
 from pygments import highlight
 # Create your models here.
 
+class AddResult(models.Model):
+    result = models.IntegerField(_("Result"))
 
-# class Author(models.Model):
-#     first_name = models.CharField(_("First Name"), max_length=50,blank = True)
-#     last_name = models.CharField(_("Last Name"), max_length=50,blank = True)
-#     username = models.CharField(_("Username"), max_length=50)
-#     email = models.EmailField(_("Email"), max_length=254)
-#     password = models.CharField(_("Password"), max_length=50, null=True)
-#     profile_img = models.ImageField(_("Profile Image"), upload_to='profile-pictures/',blank = True)
+    def __str__(self):
+        return str(self.result)
 
-#     class Meta:
-#         verbose_name = _("Author")
-#         verbose_name_plural = _("Authors")
+class countStory(models.Model):
+    story_count = models.IntegerField(_("Story Count"))
 
-#     def __str__(self):
-#         return self.username
-
+    def __str__(self):
+        return str(self.story_count)
+        
 
 class Story(models.Model):
     title = models.CharField(_("Title"), max_length=200)
     description = models.TextField(_("Description"))
     storie_img = models.ImageField(_("Storie Image"), upload_to = 'storie-pictures/', blank=True, null=True)
-
+    
     author = models.ForeignKey("account.MyUser", verbose_name=_("Author"), on_delete=models.CASCADE, null=True, related_name = 'stories')
-    highlighted = models.TextField()
     category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True, related_name = 'stories')
 
     created_at = models.DateTimeField(_("Created Time"),auto_now_add=True)
@@ -42,26 +37,15 @@ class Story(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        """
-            Use the `pygments` library to create a highlighted HTML
-            representation of the story.
-        """
-        lexer = get_lexer_by_name(self.language)
-        linenos = 'table' if self.linenos else False
-        options = {'title': self.title} if self.title else {}
-        formatter = HtmlFormatter(style=self.style, linenos=linenos,
-                                full=True, **options)
-        self.highlighted = highlight(self.code, lexer, formatter)
-        super(Story, self).save(*args, **kwargs)
+   
 
 class Recipe(models.Model):
     title = models.CharField(_("Title"), max_length=200)
     description = models.TextField(_("Description"))
-    storie_img = models.ImageField(_("Recipe Image"), upload_to = 'recipe-pictures/')
+    recipe_img = models.ImageField(_("Recipe Image"), upload_to = 'recipe-pictures/', blank=True, null=True)
 
-    author = models.ForeignKey("account.MyUser", verbose_name=_("Author"), on_delete=models.CASCADE)
-    category = models.ManyToManyField("stories.Category", verbose_name=_(""))
+    author = models.ForeignKey("account.MyUser", verbose_name=_("Author"), on_delete=models.CASCADE, null = True, related_name = 'recipes')
+    category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank = True, null = True, related_name = 'recipes')
 
     created_at = models.DateTimeField(_("Created Time"),auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated Time"), auto_now=True)
@@ -122,6 +106,7 @@ class Subscribe(models.Model):
     def __str__(self):
         return self.name
 
+
 class StaticInfo(models.Model):
     address = models.CharField(_("Address"), max_length=100)
     contact_number = models.CharField(_("Contact Number"), max_length=50)
@@ -135,6 +120,7 @@ class StaticInfo(models.Model):
     def __str__(self):
         return self.email_address
 
+
 class Tag(models.Model):
 
     title = models.CharField(_("Tag title"), max_length=50)
@@ -146,4 +132,17 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+
+class Car(models.Model):
+    title = models.CharField(_("Title"), max_length=50)
+    description = models.TextField(_("Description"))
+    price = models.IntegerField(_("Price"), default = 0)
+    image = models.URLField(_("Image"), max_length=200)
+
+    class Meta:
+        verbose_name = 'Car'
+        verbose_name_plural = 'Cars'
+
+    def __str__(self):
+        return self.title
     

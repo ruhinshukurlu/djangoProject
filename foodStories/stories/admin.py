@@ -1,5 +1,5 @@
 from django.contrib import admin
-from stories.models import Story,Recipe,Category,Comment,Contact,Subscribe
+from stories.models import Story,Recipe,Category,Comment,Contact,Subscribe, Car
 # Register your models here.
 
 
@@ -77,3 +77,8 @@ class SubscribeAdmin(admin.ModelAdmin):
     ordering = ('email',)
     search_fields = ('email',)
 
+
+@admin.register(Car)
+class CarAdmin(admin.ModelAdmin):
+    list_display = ('title','description','price','image',)
+    
