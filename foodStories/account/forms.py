@@ -93,3 +93,32 @@ class SetPasswordForm(SetPasswordForm):
         'placeholder' : 'Re-enter New Password',
         'class' : 'form-control'
     }), required=True)
+
+class UserEditForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'username','email','bio', 'profile_img']
+
+        widgets = {
+            'first_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder' : 'First Name',
+                }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder' : 'Last Name',
+                }),
+            'username': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder' : 'Username',
+                }),
+            'email' : forms.EmailInput(attrs = {
+                'class' : 'form-control',
+                'placeholder' : 'Email'
+            }),
+            'bio': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder' : 'Write about yourself...'
+            }),
+        }

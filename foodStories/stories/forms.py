@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from stories.models import Contact,Subscribe,Story, Recipe
+from stories.models import Contact,Subscribe,Story, Recipe, Comment
 
 class ContactModelForm(forms.ModelForm):
     
@@ -69,7 +69,10 @@ class RecipeForm(forms.ModelForm):
             }),
         }
 
-
+# class CommentForm(forms.ModelForm):
+#     class Meta:
+#         model = Comment
+        # fields = ['']
 
 
 class AddNumbersForm(forms.Form):

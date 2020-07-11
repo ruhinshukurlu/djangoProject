@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'social_django',
     'django_celery_results',
+    'django_celery_beat',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -80,6 +81,16 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Nairobi'
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'ruhinshukurlu@gmail.com'
+EMAIL_HOST_PASSWORD = 'dsjfjdnfnjdsnfe'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 MIDDLEWARE = [

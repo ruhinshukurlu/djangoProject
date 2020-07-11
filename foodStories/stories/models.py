@@ -104,7 +104,7 @@ class Subscribe(models.Model):
         verbose_name_plural = _("Subscribes")
 
     def __str__(self):
-        return self.name
+        return self.email
 
 
 class StaticInfo(models.Model):

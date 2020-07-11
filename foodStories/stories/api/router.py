@@ -4,7 +4,7 @@ from stories.api.views import StoryViewSet, UserViewSet, RecipeViewSet,\
                               TagViewSet, CarViewSet
 
 router = DefaultRouter()
-router.register(r'stories', StoryViewSet)
+router.register(r'story_list', StoryViewSet)
 router.register(r'users', UserViewSet)
 router.register(r'recipes', RecipeViewSet)
 router.register(r'comments', CommentViewSet)

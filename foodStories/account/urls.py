@@ -1,5 +1,5 @@
 from django.urls import path
-from account.views import RegisterView,LoginView,ChangePasswordView,ChangePasswordDoneView
+from account.views import RegisterView,LoginView,ChangePasswordView,ChangePasswordDoneView, UserProfileView, UpdateUserView
 from django.contrib.auth.views import LogoutView
 app_name = 'account'
 
@@ -9,5 +9,7 @@ urlpatterns = [
     path('logout', LogoutView.as_view(), name = 'logout'),
     path('change_password/',ChangePasswordView.as_view(), name = 'change-password'),
     path('change_password_done/',ChangePasswordDoneView.as_view(), name = 'change-password-done'),
+    path('profile/<int:pk>', UserProfileView.as_view(), name = 'user-profile'),
+    path('update/<int:pk>', UpdateUserView.as_view(), name = 'edit_profile'),
     # path('reset_password/r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$'')
 ]

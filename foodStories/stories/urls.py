@@ -1,8 +1,6 @@
 from django.urls import path
-from stories.views import HomeView,StoryView,AboutView,ContactView,\
-     recipes,stories,single,user_profile,email_subscribers,change_password,\
-     forget_password,login,register,reset_password,\
-     story_list,story_detail, AddNumbersView, RecipeView
+from stories.views import HomeView,StoryCreateView,AboutView,ContactView, single,\
+     AddNumbersView, RecipeView, NotifySubscribers, StoryListView, RecipeListView
 from stories.api.urls import urlpatterns as api_urls
 
 app_name = 'stories'
@@ -11,19 +9,11 @@ urlpatterns = [
     path('', HomeView.as_view(), name='Home'),
     path('about', AboutView.as_view(), name='About'),
     path('contact', ContactView.as_view(), name='contact'),
-    path('create_story', StoryView.as_view(), name='create_story'),
+    path('create_story', StoryCreateView.as_view(), name='create_story'),
+    path('story_list/', StoryListView.as_view(), name='Stories'),
     path('create_recipe', RecipeView.as_view(), name='create_recipe'),
-    path('recipes', recipes, name='recipes'),
-    path('story', stories, name='stories'),
+    path('recipes', RecipeListView.as_view(), name='recipes'),
     path('single', single, name='single'),
-    path('user_profile', user_profile, name='user_profile'),
-    path('email_subscribers', email_subscribers, name='email_subscribers'),
-    path('change_password', change_password, name='change_password'),
-    path('forget_password', forget_password, name='forget_password'),
-    path('login', login, name='login'),
-    path('register', register, name='register'),
-    path('reset_password', reset_password, name='reset_password'),
     path('numbers/add', AddNumbersView.as_view(), name = 'add-numbers'),
-    # path('story_list/', story_list),
-    # path('story_list/<int:pk>/', story_detail),   
-] + api_urls
+    path("notify", NotifySubscribers.as_view(), name="notify-subscribers"),
+] 
