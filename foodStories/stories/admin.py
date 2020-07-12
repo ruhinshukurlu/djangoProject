@@ -3,35 +3,17 @@ from stories.models import Story,Recipe,Category,Comment,Contact,Subscribe, Car
 # Register your models here.
 
 
-# @admin.register(Author)
-# class AuthorAdmin(admin.ModelAdmin):
-#     list_display = ('first_name','last_name','username','email',)
-#     ordering = ('first_name',)
-#     search_fields = ('first_name','last_name','username','email',)
-
-#     fieldsets = (
-#         ('Required Information', {
-#             'description' : 'These fields are required',
-#             "fields": ('username','email','password'),
-#         }),
-#         ('Optional Information', {
-#             'classes' : ('collapse',),
-#             "fields": ('first_name','last_name','profile_img',),
-#         }),
-#     )
-    
-
 
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
-    list_display = ('title','description','author')
+    list_display = ('title','author')
     ordering = ('title',)
     search_fields = ('title','author','category')
     list_filter = ('created_at',)
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('title','description')
+    list_display = ('title','author')
     ordering = ('title',)
     search_fields = ('title','author','category')
     list_filter = ('created_at',)

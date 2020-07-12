@@ -69,10 +69,34 @@ class RecipeForm(forms.ModelForm):
             }),
         }
 
-# class CommentForm(forms.ModelForm):
-#     class Meta:
-#         model = Comment
-        # fields = ['']
+class SubscribeForm(forms.ModelForm):
+    class Meta:
+        model = Subscribe
+        fields = ['email']
+
+        widgets = {
+            'email' : forms.EmailInput(attrs = {
+                'class' : 'form-control',
+                'placeholder' : 'Enter email address',
+            })
+        }
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['name','email','text']
+
+        widgets = {
+            'name' : forms.TextInput(attrs = {
+                'class' : 'form-control',
+            }),
+            'email' : forms.EmailInput(attrs = {
+                'class' : 'form-control',
+            }),
+            'name' : forms.Textarea(attrs = {
+                'class' : 'form-control',
+            }),
+        }
 
 
 class AddNumbersForm(forms.Form):

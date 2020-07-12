@@ -11,7 +11,7 @@ Stories - Free Bootstrap 4 Template by Colorlib
             <div class="row block-9 justify-content-center">
                 <div class="col-md-6 order-md-last d-flex">
                     <!-- <h1>{{request.user}}</h1> -->
-                    <form method="POST" class="bg-light p-5 contact-form">
+                    <form method="POST" class="bg-light p-5 contact-form" enctype= "multipart/form-data">
                         {% csrf_token %}
                         <a class="navbar-brand center" href="#">Stories<span>.</span></a>
                         {% for field in form %}

@@ -59,6 +59,9 @@ class Recipe(models.Model):
 
 
 class Comment(models.Model):
+    name = models.CharField(_("Name"), max_length=50, blank = True)
+    email = models.EmailField(_("Email"), max_length=254, blank = True)
+    reply = models.ForeignKey("self", verbose_name=_("Reply"), on_delete=models.CASCADE, blank = True, null = True)
     author = models.ForeignKey("account.MyUser", verbose_name=_("Comment Author"), on_delete=models.CASCADE)
     post = models.ForeignKey("stories.Story", verbose_name=_("Story Comment"), on_delete=models.CASCADE)
     text = models.TextField(_("Text"))
@@ -69,6 +72,9 @@ class Comment(models.Model):
         verbose_name = _("Comment")
         verbose_name_plural = _("Comments")
 
+    def __str__(self):
+        return self.text
+    
 
 class Category(models.Model):
     title = models.CharField(_("Title"), max_length=50)
